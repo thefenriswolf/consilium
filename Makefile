@@ -27,6 +27,6 @@ test:
 #	go test -bench=. -benchmem
 
 clean:
-	rm -v iplan_linux_* iplan_osx_* iplan_win_* iplan
+	rm -v iplan_linux_* iplan_osx_* iplan_win_* iplan insomniplan
 
 # end

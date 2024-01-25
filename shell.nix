@@ -7,6 +7,7 @@ pkgs.mkShell {
     pkgs.go-tools # staticcheck, ...
     pkgs.delve
     pkgs.gopls
+    pkgs.gcc
     pkgs.gomodifytags
     pkgs.gore
     pkgs.gotests
