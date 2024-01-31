@@ -17,6 +17,6 @@ const PORT string = ":6477"
 const ADDRESS string = "localhost" + PORT
 
 func main() {
-	WriteDB()
+	WriteDB("dev.db", "devbucket", "devkey", []byte("devdata"))
 	LaunchServer(PORT)
 }

@@ -5,15 +5,15 @@ import (
 	"log"
 )
 
-func dbOpen() *bolt.DB {
-	db, err := bolt.Open("my.db", 0600, nil)
+func dbOpen(dbname string) *bolt.DB {
+	db, err := bolt.Open(dbname, 0600, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return db
 }
 
-func dbBucket(bucket string, db *bolt.DB) {
+func dbInsert(db *bolt.DB, bucketname string, key string, data []byte) {
 	// start transaction
 	tx, err := db.Begin(true)
 	if err != nil {
@@ -21,7 +21,12 @@ func dbBucket(bucket string, db *bolt.DB) {
 	}
 	defer tx.Rollback()
 	// create bucket
-	_, err = tx.CreateBucketIfNotExists([]byte(bucket))
+	bucket, err := tx.CreateBucketIfNotExists([]byte(bucketname))
+	if err != nil {
+		log.Fatal(err)
+	}
+	// write entry
+	err = bucket.Put([]byte(key), data)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,8 +37,8 @@ func dbBucket(bucket string, db *bolt.DB) {
 	}
 }
 
-func WriteDB() {
-	db := dbOpen()
+func WriteDB(dbname string, bucketname string, key string, data []byte) {
+	db := dbOpen(dbname)
 	defer db.Close()
-	dbBucket("testbucket3", db)
+	dbInsert(db, bucketname, key, data)
 }
