@@ -12,8 +12,8 @@ type dbtest struct {
 }
 
 var dbtestList = []dbtest{
-	dbtest{"testdb.db", "testbucket", "td", []byte("testdata")},
-	dbtest{"testdb.db", "testbucket", "tj", []byte(`{"birds":{"pigeon":"likes to perch on rocks","eagle":"bird of prey"`)},
+	dbtest{"./test/testdb.db", "testbucket", "td", []byte("testdata")},
+	dbtest{"./test/testdb.db", "testbucket", "tj", []byte(`{"birds":{"pigeon":"likes to perch on rocks","eagle":"bird of prey"`)},
 }
 
 func TestWriteDB(t *testing.T) {
