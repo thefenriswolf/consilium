@@ -1,0 +1,12 @@
+[[file:https://github.com/thefenriswolf/insomniplan/blob/main/assets/insomniplan_logo.png]]
+* insomniplan
+=insomniplan= is a self contained web-app written in GoLang.
+
+* Table of Contents :TOC:QUOTE:
+#+BEGIN_QUOTE
+- [[#insomniplan][insomniplan]]
+- [[#license][License]]
+#+END_QUOTE
+
+* License
+=insomniplan= is [[https://github.com/thefenriswolf/insomniplan/blob/main/LICENSE][GPLv3]] licensed.

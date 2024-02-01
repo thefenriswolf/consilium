@@ -4,6 +4,11 @@ import (
 	"embed"
 )
 
+// #+TODO: ro database entries
+// #+TODO: save data as json?
+// #+TODO: PDF export
+// #+TODO: graceful shutdown
+
 //const LANG string = "en"
 //const VERSION string = "20240130"
 

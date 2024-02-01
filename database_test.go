@@ -1,6 +1,7 @@
 package main
 
 import (
+	//	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -17,6 +18,7 @@ var dbtestList = []dbtest{
 }
 
 func TestWriteDB(t *testing.T) {
+	//	assert := assert.New(t)
 	for _, item := range dbtestList {
 		WriteDB(item.dbname, item.bucketname, item.key, item.data)
 	}
