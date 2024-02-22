@@ -13,7 +13,18 @@ pkgs.mkShell {
     pkgs.gotests
     pkgs.gocode
     pkgs.govulncheck
-    # keep this line if you use bash
+    pkgs.libGL
+    pkgs.mesa
+    pkgs.xorg.libXcursor
+    pkgs.xorg.libXi
+    pkgs.xorg.libXinerama
+    pkgs.xorg.libXrandr
+    pkgs.xorg.libXxf86vm
+    pkgs.pkg-config
+    pkgs.libglvnd
+    pkgs.libglibutil
+    pkgs.gcc
+    pkgs.bashInteractive
     pkgs.bashInteractive
   ];
 }

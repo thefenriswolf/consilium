@@ -9,4 +9,3 @@
 #+END_QUOTE
 
 * License
-=insomniplan= is [[https://github.com/thefenriswolf/insomniplan/blob/main/LICENSE][GPLv3]] licensed.

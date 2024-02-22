@@ -3,12 +3,15 @@
 #
 # @file
 # @version 0.1
-.PHONY: release clean test benchmark lint
+.PHONY: build-release build-debug clean test benchmark lint
 
-debug:
+run:
+	nixGL go run main.go
+
+build-debug:
 	CGO_ENABLED=0 go build -o ./bin/iplan
 
-release: linux windows osx
+build-release: linux windows osx
 
 linux:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/iplan_linux_amd64
@@ -22,6 +25,7 @@ osx:
 lint:
 	go vet .
 	staticcheck .
+	govulncheck .
 test:
 	go test -v
 	go test -coverprofile=./test/coverage.out
