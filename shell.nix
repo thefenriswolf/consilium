@@ -13,6 +13,8 @@ pkgs.mkShell {
     pkgs.gotests
     pkgs.gocode
     pkgs.govulncheck
+    pkgs.revive
+
     pkgs.libGL
     pkgs.mesa
     pkgs.xorg.libXcursor

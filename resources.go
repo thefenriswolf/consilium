@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"embed"
+	"image"
 	"image/color"
 	"log"
 
@@ -9,22 +11,40 @@ import (
 	"golang.org/x/image/font/opentype"
 )
 
-//go:embed assets/*
-var Resources embed.FS
-
 const (
-	DPI          = 72
+	// program title/name
+	WindowTitle = "insomniplan"
+
+	//TPS
+	TPS = 30
+
+	// enable/disable antialiasing
+	AA = true
+
+	// recommended by golang opentype package
+	fontDPI = 72
+
+	// initial screen size
 	ScreenWidth  = 800
 	ScreenHeight = 600
 )
 
 var (
-	NFont font.Face
+	// variable to hold all logo PNG files
+	Logos []image.Image
+
+	// globaly availabe fonts
+	MP_N_Font font.Face // MPlus regular
+
+	// bundled stuff
+	//go:embed assets/*
+	Resources embed.FS
 )
 
+// colors used throughout iplan
 var (
 	Purple color.RGBA = color.RGBA{255, 0, 255, 255}
-	// catppuccin latte
+	// source: catppuccin latte
 	Rosewater color.RGBA = color.RGBA{220, 138, 120, 255}
 	Flamingo  color.RGBA = color.RGBA{221, 120, 120, 255}
 	Pink      color.RGBA = color.RGBA{234, 118, 203, 255}
@@ -40,6 +60,7 @@ var (
 	Blue      color.RGBA = color.RGBA{30, 102, 245, 255}
 	Lavender  color.RGBA = color.RGBA{114, 135, 253, 255}
 	Text      color.RGBA = color.RGBA{76, 79, 105, 255}
+	FullWhite color.RGBA = color.RGBA{255, 255, 255, 255}
 	Subtext1  color.RGBA = color.RGBA{92, 95, 119, 255}
 	Subtext0  color.RGBA = color.RGBA{108, 111, 133, 255}
 	Overlay2  color.RGBA = color.RGBA{124, 127, 147, 255}
@@ -52,11 +73,23 @@ var (
 	Mantle    color.RGBA = color.RGBA{230, 233, 239, 255}
 	Crust     color.RGBA = color.RGBA{220, 224, 232, 255}
 	Black     color.RGBA = color.RGBA{17, 17, 27, 255}
+	FullBlack color.RGBA = color.RGBA{0, 0, 0, 255}
 )
 
+// boilerplate ebiten function: init stuff
 func init() {
 	//WriteDB("test/dev.db", "devbucket", "devkey", []byte("devdata"))
-	file, err := Resources.ReadFile("assets/fonts/otf/Mplus1-Regular.otf")
+	file, err := Resources.ReadFile("assets/logo32x32.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	logofile, _, err := image.Decode(bytes.NewReader(file))
+	if err != nil {
+		log.Fatal(err)
+	}
+	Logos = append(Logos, logofile)
+
+	file, err = Resources.ReadFile("assets/fonts/otf/Mplus1-Regular.otf")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,9 +97,9 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	NFont, err = opentype.NewFace(s, &opentype.FaceOptions{
-		Size:    11,
-		DPI:     DPI,
+	MP_N_Font, err = opentype.NewFace(s, &opentype.FaceOptions{
+		Size:    30,
+		DPI:     fontDPI,
 		Hinting: font.HintingFull,
 	})
 	if err != nil {
