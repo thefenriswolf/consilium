@@ -6,21 +6,21 @@
 .PHONY: build-release build-debug clean test benchmark lint
 
 run:
-	nixGL go run main.go
+	nixGL go run -tags=ebitenginedebug main.go database.go resources.go
 
 build-debug:
-	CGO_ENABLED=0 go build -o ./bin/iplan
+	go build -o ./bin/iplan
 
-build-release: linux windows osx
+build-release: linux windows
+
+build-run: build-debug
+	nixGL ./bin/iplan
 
 linux:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/iplan_linux_amd64
+	GOOS=linux GOARCH=amd64 go build -o ./bin/iplan_linux_amd64
 
 windows:
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ./bin/iplan_win_amd64.exe
-
-osx:
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./bin/iplan_osx_amd64
 
 lint:
 	go vet .
@@ -37,5 +37,5 @@ test:
 clean:
 	rm -v ./bin/iplan_* ./bin/insomniplan* ./bin/iplan*
 	rm -v ./test/*
-
+	rm *.db
 # end

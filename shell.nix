@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> { } }:
 
 pkgs.mkShell {
   buildInputs = [
@@ -24,7 +24,6 @@ pkgs.mkShell {
     pkgs.libglvnd
     pkgs.libglibutil
     pkgs.gcc
-    pkgs.bashInteractive
     pkgs.bashInteractive
   ];
 }

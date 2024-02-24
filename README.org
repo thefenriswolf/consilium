@@ -1,6 +1,6 @@
 [[file:https://github.com/thefenriswolf/insomniplan/blob/main/assets/insomniplan_logo.png]]
 * insomniplan
-=insomniplan= is a self contained web-app written in GoLang.
+=insomniplan= is a self contained shift planner written in GoLang.
 
 * Table of Contents :TOC:QUOTE:
 #+BEGIN_QUOTE

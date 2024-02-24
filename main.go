@@ -1,58 +1,18 @@
 package main
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"log"
-	// "github.com/hajimehoshi/ebiten/v2/text"
 	"bytes"
-	"embed"
 	"fmt"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image"
 	"image/color"
 	_ "image/png"
-)
+	"log"
 
-//go:embed assets/*
-var resources embed.FS
-
-const (
-	screenWidth  = 800
-	screenHeight = 600
-)
-
-var (
-	purple color.RGBA = color.RGBA{255, 0, 255, 255}
-	// catppuccin latte
-	Rosewater color.RGBA = color.RGBA{220, 138, 120, 255}
-	Flamingo  color.RGBA = color.RGBA{221, 120, 120, 255}
-	Pink      color.RGBA = color.RGBA{234, 118, 203, 255}
-	Mauve     color.RGBA = color.RGBA{136, 57, 239, 255}
-	Red       color.RGBA = color.RGBA{210, 15, 57, 255}
-	Maroon    color.RGBA = color.RGBA{230, 69, 83, 255}
-	Peach     color.RGBA = color.RGBA{254, 100, 11, 255}
-	Yellow    color.RGBA = color.RGBA{223, 142, 29, 255}
-	Green     color.RGBA = color.RGBA{64, 160, 43, 255}
-	Teal      color.RGBA = color.RGBA{23, 146, 153, 255}
-	Sky       color.RGBA = color.RGBA{4, 165, 229, 255}
-	Sapphire  color.RGBA = color.RGBA{32, 159, 181, 255}
-	Blue      color.RGBA = color.RGBA{30, 102, 245, 255}
-	Lavender  color.RGBA = color.RGBA{114, 135, 253, 255}
-	Text      color.RGBA = color.RGBA{76, 79, 105, 255}
-	Subtext1  color.RGBA = color.RGBA{92, 95, 119, 255}
-	Subtext0  color.RGBA = color.RGBA{108, 111, 133, 255}
-	Overlay2  color.RGBA = color.RGBA{124, 127, 147, 255}
-	Overlay1  color.RGBA = color.RGBA{140, 143, 161, 255}
-	Overlay0  color.RGBA = color.RGBA{156, 160, 176, 255}
-	Surface2  color.RGBA = color.RGBA{172, 176, 190, 255}
-	Surface1  color.RGBA = color.RGBA{188, 192, 204, 255}
-	Surface0  color.RGBA = color.RGBA{204, 208, 218, 255}
-	Base      color.RGBA = color.RGBA{239, 241, 245, 255}
-	Mantle    color.RGBA = color.RGBA{230, 233, 239, 255}
-	Crust     color.RGBA = color.RGBA{220, 224, 232, 255}
-	Black     color.RGBA = color.RGBA{17, 17, 27, 255}
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 type Game struct {
@@ -82,7 +42,7 @@ func (g *Game) drawCirc(dst *ebiten.Image, x_pos int, y_pos int, radius int, str
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return screenWidth, screenHeight
+	return ScreenWidth, ScreenHeight
 }
 
 func (g *Game) Update() error {
@@ -91,7 +51,7 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.drawRect(screen, 200, 100, 300, 200, purple, true)
+	g.drawRect(screen, 200, 100, 300, 200, Lavender, true)
 	g.drawCirc(screen, 100, 100, 50, 2, Peach, true, true)
 	g.drawCirc(screen, 400, 400, 50, 2, Mauve, true, false)
 	var keys []string
@@ -100,16 +60,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 	msg := fmt.Sprintf("TPS: %0.2f\nKey: \n%s", ebiten.ActualTPS(), keys)
 	ebitenutil.DebugPrint(screen, msg)
-}
-
-func init() {
-	WriteDB("dev.db", "devbucket", "devkey", []byte("devdata"))
+	text.Draw(screen, msg, NFont, 20, 40, color.White)
 }
 
 func main() {
-	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowSize(ScreenWidth, ScreenHeight)
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
-	file, err := resources.ReadFile("assets/logo32x32.png")
+	file, err := Resources.ReadFile("assets/logo32x32.png")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -120,7 +77,8 @@ func main() {
 	var logos []image.Image
 	logos = append(logos, logofile)
 	ebiten.SetWindowIcon(logos)
-	// ebiten.SetTPS(30) //set window update rate, default: 60
+	ebiten.SetTPS(30)                     //set window update rate, default: 60
+	ebiten.SetWindowClosingHandled(false) // do stuff when window is about to be closed
 	ebiten.SetWindowFloating(true)
 	ebiten.SetWindowTitle("insomniplan")
 	if err := ebiten.RunGame(&Game{}); err != nil {
