@@ -9,3 +9,5 @@
 #+END_QUOTE
 
 * License
+=insomniplan= is licensed under Apache license version 2.0, see the [[https://github.com/thefenriswolf/insomniplan/blob/main/LICENSE][LICENSE]] file.
+Any internal artwork and assets are licensed under the CC-BY-4.0 license, see the [][LICENSE] file.

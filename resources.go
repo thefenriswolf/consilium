@@ -6,6 +6,8 @@ import (
 	"image"
 	"image/color"
 	"log"
+	"strings"
+	"sync"
 
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
@@ -30,8 +32,26 @@ const (
 )
 
 var (
+	// baked files
+	// LOGOS
+	listOfLogos = []string{
+		"assets/logo16x16.png",
+		"assets/logo32x32.png",
+		"assets/logo64x64.png"}
 	// variable to hold all logo PNG files
 	Logos []image.Image
+
+	// FONTS
+	mplus2Fonts = []string{
+		"assets/fonts/otf/Mplus2-Black.otf",
+		"assets/fonts/otf/Mplus2-Bold.otf",
+		"assets/fonts/otf/Mplus2-ExtraBold.otf",
+		"assets/fonts/otf/Mplus2-ExtraLight.otf",
+		"assets/fonts/otf/Mplus2-Light.otf",
+		"assets/fonts/otf/Mplus2-Medium.otf",
+		"assets/fonts/otf/Mplus2-Regular.otf",
+		"assets/fonts/otf/Mplus2-SemiBold.otf",
+		"assets/fonts/otf/Mplus2-Thin.otf"}
 
 	// globaly availabe fonts
 	MP_N_Font font.Face // MPlus regular
@@ -76,33 +96,59 @@ var (
 	FullBlack color.RGBA = color.RGBA{0, 0, 0, 255}
 )
 
+// load fonts from resources
+func fontLoader(size int, kind string) font.Face {
+	var loadedFont font.Face
+	for i := range mplus2Fonts {
+		file, err := Resources.ReadFile(mplus2Fonts[i])
+		if err != nil {
+			log.Fatal(err)
+		}
+		s, err := opentype.Parse(file)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if strings.Contains(mplus2Fonts[i], kind) {
+			loadedFont, err = opentype.NewFace(s, &opentype.FaceOptions{
+				Size:    float64(size),
+				DPI:     fontDPI,
+				Hinting: font.HintingFull,
+			})
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
+	return loadedFont
+}
+
+// load logos from resources
+func logoLoader() {
+	for i := range listOfLogos {
+		file, err := Resources.ReadFile(listOfLogos[i])
+		if err != nil {
+			log.Fatal(err)
+		}
+		logo, _, err := image.Decode(bytes.NewReader(file))
+		if err != nil {
+			log.Fatal(err)
+		}
+		Logos = append(Logos, logo)
+	}
+}
+
 // boilerplate ebiten function: init stuff
 func init() {
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		logoLoader()
+		wg.Done()
+	}()
+	go func() {
+		MP_N_Font = fontLoader(30, "ExtraLight")
+		wg.Done()
+	}()
+	wg.Wait()
 	//WriteDB("test/dev.db", "devbucket", "devkey", []byte("devdata"))
-	file, err := Resources.ReadFile("assets/logo32x32.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-	logofile, _, err := image.Decode(bytes.NewReader(file))
-	if err != nil {
-		log.Fatal(err)
-	}
-	Logos = append(Logos, logofile)
-
-	file, err = Resources.ReadFile("assets/fonts/otf/Mplus1-Regular.otf")
-	if err != nil {
-		log.Fatal(err)
-	}
-	s, err := opentype.Parse(file)
-	if err != nil {
-		log.Fatal(err)
-	}
-	MP_N_Font, err = opentype.NewFace(s, &opentype.FaceOptions{
-		Size:    30,
-		DPI:     fontDPI,
-		Hinting: font.HintingFull,
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
 }
