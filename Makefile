@@ -6,7 +6,7 @@
 .PHONY: build-release build-debug clean test benchmark lint
 
 run:
-	nixGL go run -tags=ebitenginedebug main.go database.go resources.go
+	nixGL go run -tags=ebitenginedebug main.go database.go resources.go shapes.go
 
 build-debug:
 	go build -o ./bin/iplan
@@ -25,6 +25,7 @@ windows:
 lint:
 	go vet .
 	staticcheck .
+	revive
 	govulncheck .
 test:
 	go test -v
