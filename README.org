@@ -1,13 +1,20 @@
 [[file:https://github.com/thefenriswolf/insomniplan/blob/main/assets/insomniplan_logo.png]]
+
 * insomniplan
 =insomniplan= is a self contained shift planner written in GoLang.
 
 * Table of Contents :TOC:QUOTE:
 #+BEGIN_QUOTE
 - [[#insomniplan][insomniplan]]
+- [[#credits][Credits]]
 - [[#license][License]]
 #+END_QUOTE
 
+* Credits
+- [[https://github.com/etcd-io/bbolt][BoltDB]]
+- [[https://github.com/hajimehoshi/ebiten][Ebitengine]]
+- [[https://github.com/coz-m/MPLUS_FONTS][M+ FONTS]]
+
 * License
 =insomniplan= is licensed under Apache license version 2.0, see the [[https://github.com/thefenriswolf/insomniplan/blob/main/LICENSE][LICENSE]] file.
-Any internal artwork and assets are licensed under the CC-BY-4.0 license, see the [][LICENSE] file.
+Any internal artwork and assets are licensed under the CC-BY-4.0 license, see the [[https://github.com/thefenriswolf/insomniplan/blob/main/assets/LICENSE][LICENSE]] file.

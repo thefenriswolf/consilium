@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	_ "image/png"
-
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
+	_ "image/png"
 )
 
 // boilerplate ebiten game struct

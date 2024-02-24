@@ -64,6 +64,7 @@ func dbInsert(db *bolt.DB, bucketname string, key string, data []byte) error {
 
 func WriteDB(dbname string, bucketname string, key string, data []byte) {
 	db := dbOpen(dbname)
+
 	defer db.Close()
 	err := dbInsert(db, bucketname, key, data)
 	if err != nil {

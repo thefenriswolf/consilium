@@ -41,7 +41,7 @@ var (
 	// variable to hold all logo PNG files
 	Logos []image.Image
 
-	// FONTS
+	// Fonts
 	mplus2Fonts = []string{
 		"assets/fonts/otf/Mplus2-Black.otf",
 		"assets/fonts/otf/Mplus2-Bold.otf",

@@ -27,6 +27,7 @@ lint:
 	staticcheck .
 	revive
 	govulncheck .
+
 test:
 	go test -v
 	go test -coverprofile=./test/coverage.out
