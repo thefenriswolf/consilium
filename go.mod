@@ -1,4 +1,4 @@
-module insomniplan
+module consilium
 
 go 1.21.5
 

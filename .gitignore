@@ -8,3 +8,5 @@ bin/
 .direnv
 iplan*
 *.db
+
+dist/

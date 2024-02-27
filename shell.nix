@@ -14,6 +14,7 @@ pkgs.mkShell {
     pkgs.gocode
     pkgs.govulncheck
     pkgs.revive
+    pkgs.goreleaser
 
     pkgs.libGL
     pkgs.mesa

@@ -15,7 +15,7 @@ import (
 
 const (
 	// program title/name
-	WindowTitle = "insomniplan"
+	WindowTitle = "consilium"
 
 	//TPS
 	TPS = 30
@@ -34,7 +34,7 @@ const (
 var (
 	// baked files
 	// LOGOS
-	listOfLogos = []string{
+	listOfLogos = [3]string{
 		"assets/logo16x16.png",
 		"assets/logo32x32.png",
 		"assets/logo64x64.png"}
@@ -42,7 +42,7 @@ var (
 	Logos []image.Image
 
 	// Fonts
-	mplus2Fonts = []string{
+	mplus2Fonts = [9]string{
 		"assets/fonts/otf/Mplus2-Black.otf",
 		"assets/fonts/otf/Mplus2-Bold.otf",
 		"assets/fonts/otf/Mplus2-ExtraBold.otf",
@@ -123,7 +123,8 @@ func fontLoader(size int, kind string) font.Face {
 }
 
 // load logos from resources
-func logoLoader() {
+func logoLoader() []image.Image {
+	var logoBuffer []image.Image
 	for i := range listOfLogos {
 		file, err := Resources.ReadFile(listOfLogos[i])
 		if err != nil {
@@ -133,8 +134,9 @@ func logoLoader() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		Logos = append(Logos, logo)
+		logoBuffer = append(logoBuffer, logo)
 	}
+	return logoBuffer
 }
 
 // boilerplate ebiten function: init stuff
@@ -142,7 +144,7 @@ func init() {
 	var wg sync.WaitGroup
 	wg.Add(2)
 	go func() {
-		logoLoader()
+		Logos = logoLoader()
 		wg.Done()
 	}()
 	go func() {
