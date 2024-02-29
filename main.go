@@ -28,6 +28,18 @@ func (g *Game) Update() error {
 
 // boilerplate ebiten function: draws stuff
 func (g *Game) Draw(screen *ebiten.Image) {
+
+	newButton := &Button{
+		posX:      800,
+		posY:      800,
+		width:     100,
+		height:    100,
+		text:      "test",
+		bgColor:   FullWhite,
+		textColor: FullBlack,
+	}
+	newButton.drawButton(screen)
+
 	g.drawRect(screen, 200, 100, 300, 200, 14, Lavender, Antialias, true)
 	g.drawRect(screen, 300, 200, 300, 200, 14, Lavender, Antialias, false)
 	g.drawCirc(screen, 100, 100, 50, 2, Peach, Antialias, true)

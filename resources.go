@@ -27,8 +27,8 @@ const (
 	fontDPI = 72
 
 	// initial screen size
-	ScreenWidth  = 800
-	ScreenHeight = 600
+	ScreenWidth  = 1920
+	ScreenHeight = 1080
 )
 
 var (
