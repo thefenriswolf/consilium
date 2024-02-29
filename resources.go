@@ -21,7 +21,7 @@ const (
 	TPS = 30
 
 	// enable/disable antialiasing
-	AA = true
+	Antialias = true
 
 	// recommended by golang opentype package
 	fontDPI = 72

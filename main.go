@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	_ "image/png"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
-	_ "image/png"
 )
 
 // boilerplate ebiten game struct
@@ -27,17 +28,18 @@ func (g *Game) Update() error {
 
 // boilerplate ebiten function: draws stuff
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.drawRect(screen, 200, 100, 300, 200, 14, Lavender, AA, true)
-	g.drawRect(screen, 300, 200, 300, 200, 14, Lavender, AA, false)
-	g.drawCirc(screen, 100, 100, 50, 2, Peach, AA, true)
-	g.drawCirc(screen, 400, 400, 50, 2, Mauve, AA, false)
+	g.drawRect(screen, 200, 100, 300, 200, 14, Lavender, Antialias, true)
+	g.drawRect(screen, 300, 200, 300, 200, 14, Lavender, Antialias, false)
+	g.drawCirc(screen, 100, 100, 50, 2, Peach, Antialias, true)
+	g.drawCirc(screen, 400, 400, 50, 2, Mauve, Antialias, false)
 	var keys []string
 	for _, k := range g.keys {
 		keys = append(keys, k.String())
 	}
-	msg := fmt.Sprintf("TPS: %0.2f\nKey: \n%s", ebiten.ActualTPS(), keys)
+	cursorX, cursorY := ebiten.CursorPosition()
+	msg := fmt.Sprintf("TPS: %0.2f\nKey: \n%s\nX: %d, Y: %d\n", ebiten.ActualTPS(), keys, cursorX, cursorY)
 	ebitenutil.DebugPrint(screen, msg)
-	text.Draw(screen, msg, MP_N_Font, 40, 40, FullWhite)
+	text.Draw(screen, msg, MP_N_Font, 40, 40, Sky)
 }
 
 // setup window
