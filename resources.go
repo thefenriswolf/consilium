@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"embed"
+	"fmt"
 	"image"
 	"image/color"
 	"log"
@@ -11,6 +12,7 @@ import (
 
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
+	"gonum.org/v1/gonum/mat"
 )
 
 const (
@@ -32,6 +34,7 @@ const (
 )
 
 var (
+
 	// baked files
 	// LOGOS
 	listOfLogos = [3]string{
@@ -98,6 +101,8 @@ var (
 
 // load fonts from resources
 func fontLoader(size int, kind string) font.Face {
+	zero := mat.NewDense(3, 5, nil)
+	fmt.Println(*zero)
 	var loadedFont font.Face
 	for i := range mplus2Fonts {
 		file, err := Resources.ReadFile(mplus2Fonts[i])

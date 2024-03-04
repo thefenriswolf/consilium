@@ -2,28 +2,73 @@ package main
 
 import (
 	"image/color"
+	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
+type State int64
+
+const (
+	idle State = iota
+	clicked
+)
+
 type Button struct {
-	posX      int
-	posY      int
-	width     int
-	height    int
-	text      string
-	bgColor   color.Color
-	textColor color.Color
+	posX        int
+	posY        int
+	width       int
+	height      int
+	text        string
+	bgColor     color.Color
+	textColor   color.Color
+	state       State
+	handlerFunc func()
 }
 
-func (b *Button) drawButton(screen *ebiten.Image) {
-	vector.DrawFilledRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), b.bgColor, true)
-	vector.StrokeRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), 20, Mantle, true)
+func (b *Button) buttonClick(screen *ebiten.Image) {
+	cursorX, cursorY := ebiten.CursorPosition()
+	if cursorX >= b.posX && cursorX <= b.posX+b.width && cursorY >= b.posY && cursorY <= b.posY+b.height {
+		b.state = clicked
+		b.handlerFunc()
+		b.drawButtonState(screen)
+		go func() {
+			time.Sleep(time.Second * 1)
+			b.state = idle
+			b.drawButtonState(screen)
+		}()
+	}
+}
 
-	//ebitenutil.DrawRect(screen, float64(x+rect.Min.X), float64(y+rect.Min.Y), float64(rect.Max.X-rect.Min.X), float64(rect.Max.Y-rect.Min.Y), bgColor)
-	text.Draw(screen, b.text, MP_N_Font, b.posX+int((float32(b.width)*0.1)), b.posY+(b.height/2), b.textColor)
+func (b *Button) drawButtonState(screen *ebiten.Image) {
+	var stateColor color.RGBA
+	if b.state == idle {
+		//	stateColor = Crust
+		stateColor = Purple
+	}
+	if b.state == clicked {
+		//	stateColor = FullBlack
+		stateColor = Blue
+	}
+	vector.StrokeRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), 5, stateColor, true)
+}
+
+// custom button function with state
+func (b *Button) drawButton(screen *ebiten.Image) {
+	var stateColor color.RGBA
+	if b.state == idle {
+		//	stateColor = Crust
+		stateColor = Purple
+	}
+	if b.state == clicked {
+		//	stateColor = FullBlack
+		stateColor = Blue
+	}
+	vector.DrawFilledRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), b.bgColor, true)
+	vector.StrokeRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), 5, stateColor, true)
+	text.Draw(screen, b.text, MP_N_Font, b.posX+int((float32(b.width)*0.2)), b.posY+int((float32(b.height)/1.7)), b.textColor)
 }
 
 // wrapper function around filled and outlined Rectangle
