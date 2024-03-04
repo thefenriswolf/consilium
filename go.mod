@@ -6,7 +6,6 @@ require (
 	github.com/hajimehoshi/ebiten/v2 v2.6.6
 	go.etcd.io/bbolt v1.3.8
 	golang.org/x/image v0.15.0
-	gonum.org/v1/gonum v0.14.0
 )
 
 require (

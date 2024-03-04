@@ -1,22 +1,16 @@
 package main
 
 import (
-	"bytes"
 	"embed"
-	"fmt"
 	"image"
 	"image/color"
-	"log"
-	"strings"
 	"sync"
 
 	"golang.org/x/image/font"
-	"golang.org/x/image/font/opentype"
-	"gonum.org/v1/gonum/mat"
 )
 
 const (
-	// program title/name
+	// program title or name
 	WindowTitle = "consilium"
 
 	//TPS
@@ -34,8 +28,10 @@ const (
 )
 
 var (
-
 	// baked files
+	images = []string{
+		"assets/consilium_thanks.png",
+	}
 	// LOGOS
 	listOfLogos = [3]string{
 		"assets/logo16x16.png",
@@ -57,7 +53,15 @@ var (
 		"assets/fonts/otf/Mplus2-Thin.otf"}
 
 	// globaly availabe fonts
-	MP_N_Font font.Face // MPlus regular
+	mpRegular font.Face // MPlus regular
+	// mpBlack      font.Face
+	mpBold      font.Face
+	mpExtraBold font.Face
+	// mpExtraLight font.Face
+	// mpLight      font.Face
+	// mpMedium     font.Face
+	// mpSemiBold   font.Face
+	// mpThin       font.Face
 
 	// bundled stuff
 	//go:embed assets/*
@@ -99,51 +103,6 @@ var (
 	FullBlack color.RGBA = color.RGBA{0, 0, 0, 255}
 )
 
-// load fonts from resources
-func fontLoader(size int, kind string) font.Face {
-	zero := mat.NewDense(3, 5, nil)
-	fmt.Println(*zero)
-	var loadedFont font.Face
-	for i := range mplus2Fonts {
-		file, err := Resources.ReadFile(mplus2Fonts[i])
-		if err != nil {
-			log.Fatal(err)
-		}
-		s, err := opentype.Parse(file)
-		if err != nil {
-			log.Fatal(err)
-		}
-		if strings.Contains(mplus2Fonts[i], kind) {
-			loadedFont, err = opentype.NewFace(s, &opentype.FaceOptions{
-				Size:    float64(size),
-				DPI:     fontDPI,
-				Hinting: font.HintingFull,
-			})
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-	}
-	return loadedFont
-}
-
-// load logos from resources
-func logoLoader() []image.Image {
-	var logoBuffer []image.Image
-	for i := range listOfLogos {
-		file, err := Resources.ReadFile(listOfLogos[i])
-		if err != nil {
-			log.Fatal(err)
-		}
-		logo, _, err := image.Decode(bytes.NewReader(file))
-		if err != nil {
-			log.Fatal(err)
-		}
-		logoBuffer = append(logoBuffer, logo)
-	}
-	return logoBuffer
-}
-
 // boilerplate ebiten function: init stuff
 func init() {
 	var wg sync.WaitGroup
@@ -153,7 +112,15 @@ func init() {
 		wg.Done()
 	}()
 	go func() {
-		MP_N_Font = fontLoader(30, "ExtraLight")
+		mpRegular = fontLoader(30, "Regular")
+		// mpBlack = fontLoader(30, "Black")
+		mpBold = fontLoader(30, "Bold")
+		mpExtraBold = fontLoader(70, "ExtraBold")
+		// mpExtraLight = fontLoader(30, "ExtraLight")
+		// mpLight = fontLoader(30, "Light")
+		// mpMedium = fontLoader(30, "Medium")
+		// mpSemiBold = fontLoader(30, "SemiBold")
+		// mpThin = fontLoader(30, "Thin")
 		wg.Done()
 	}()
 	wg.Wait()

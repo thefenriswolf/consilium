@@ -9,7 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
-type State int64
+type State uint8
 
 const (
 	idle State = iota
@@ -68,7 +68,7 @@ func (b *Button) drawButton(screen *ebiten.Image) {
 	}
 	vector.DrawFilledRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), b.bgColor, true)
 	vector.StrokeRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), 5, stateColor, true)
-	text.Draw(screen, b.text, MP_N_Font, b.posX+int((float32(b.width)*0.2)), b.posY+int((float32(b.height)/1.7)), b.textColor)
+	text.Draw(screen, b.text, mpRegular, b.posX+int((float32(b.width)*0.2)), b.posY+int((float32(b.height)/1.7)), b.textColor)
 }
 
 // wrapper function around filled and outlined Rectangle
