@@ -103,6 +103,7 @@ func (g *Game) testContent(screen *ebiten.Image) {
 		width:       100,
 		height:      100,
 		text:        "test",
+		font:        mpRegular,
 		bgColor:     FullWhite,
 		textColor:   FullBlack,
 		state:       idle,

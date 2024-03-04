@@ -13,6 +13,9 @@ const (
 	// program title or name
 	WindowTitle = "consilium"
 
+	// release version
+	Version = "v20240304-pre-alpha"
+
 	//TPS
 	TPS = 30
 

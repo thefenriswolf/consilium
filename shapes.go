@@ -7,6 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"golang.org/x/image/font"
 )
 
 type State uint8
@@ -22,6 +23,7 @@ type Button struct {
 	width       int
 	height      int
 	text        string
+	font        font.Face
 	bgColor     color.Color
 	textColor   color.Color
 	state       State
@@ -58,6 +60,13 @@ func (b *Button) drawButtonState(screen *ebiten.Image) {
 // custom button function with state
 func (b *Button) drawButton(screen *ebiten.Image) {
 	var stateColor color.RGBA
+	boundsText, _ := font.BoundString(b.font, b.text)
+	centerTextY := ((boundsText.Max.Y - boundsText.Min.Y) / 2).Round()
+	centerTextX := ((boundsText.Max.X - boundsText.Min.X) / 2).Round()
+	centerButtonX := ((b.posX + b.width) - b.posX) / 2.0
+	centerButtonY := ((b.posY + b.height) - b.posY) / 2.0
+	textX := centerButtonX - centerTextX + b.posX
+	textY := int(float32(centerButtonY)*1.4) - centerTextY + b.posY
 	if b.state == idle {
 		//	stateColor = Crust
 		stateColor = Purple
@@ -68,15 +77,15 @@ func (b *Button) drawButton(screen *ebiten.Image) {
 	}
 	vector.DrawFilledRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), b.bgColor, true)
 	vector.StrokeRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), 5, stateColor, true)
-	text.Draw(screen, b.text, mpRegular, b.posX+int((float32(b.width)*0.2)), b.posY+int((float32(b.height)/1.7)), b.textColor)
+	text.Draw(screen, b.text, b.font, textX, textY, b.textColor)
 }
 
 // wrapper function around filled and outlined Rectangle
-func (g *Game) drawRect(screen *ebiten.Image, x_pos int, y_pos int, size_x int, size_y int, strokeWidth int, clr color.Color, antialias bool, fill bool) {
-	x := float32(x_pos)
-	y := float32(y_pos)
-	width := float32(size_x)
-	height := float32(size_y)
+func (g *Game) drawRect(screen *ebiten.Image, posX int, posY int, sizeX int, sizeY int, strokeWidth int, clr color.Color, antialias bool, fill bool) {
+	x := float32(posX)
+	y := float32(posY)
+	width := float32(sizeX)
+	height := float32(sizeY)
 	sw := float32(strokeWidth)
 	if !fill {
 		vector.StrokeRect(screen, x, y, width, height, sw, clr, antialias)
@@ -87,9 +96,9 @@ func (g *Game) drawRect(screen *ebiten.Image, x_pos int, y_pos int, size_x int, 
 }
 
 // wrapper function around fillend and outlined Circle
-func (g *Game) drawCirc(dst *ebiten.Image, x_pos int, y_pos int, radius int, strokeWidth int, color color.Color, antialias bool, fill bool) {
-	x := float32(x_pos)
-	y := float32(y_pos)
+func (g *Game) drawCirc(dst *ebiten.Image, posX int, posY int, radius int, strokeWidth int, color color.Color, antialias bool, fill bool) {
+	x := float32(posX)
+	y := float32(posY)
 	r := float32(radius)
 	sw := float32(strokeWidth)
 	if !fill {
