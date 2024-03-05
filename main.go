@@ -20,7 +20,7 @@ func (g *Game) Update() error {
 
 // boilerplate ebiten function: draws stuff
 func (g *Game) Draw(screen *ebiten.Image) {
-	pageSelector(screen, About)
+	pageSelector(screen, Settings)
 	//g.testContent(screen)
 }
 

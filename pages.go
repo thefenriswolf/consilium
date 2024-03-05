@@ -23,12 +23,35 @@ func pageSelector(screen *ebiten.Image, page Page) {
 	switch {
 	case page == About:
 		aboutPage(screen)
+	case page == Export:
+		exportPage(screen)
+	case page == Calendar:
+		calendarPage(screen)
+	case page == Setup:
+		setupPage(screen)
+	case page == Settings:
+		settingsPage(screen)
 	default:
 		aboutPage(screen)
 	}
 }
 
-// #+TODO: learn to center text
+func exportPage(screen *ebiten.Image) {
+	text.Draw(screen, "export not implemented yet!", mpBold, 300, 300, Red)
+}
+
+func calendarPage(screen *ebiten.Image) {
+	text.Draw(screen, "calendar not implemented yet!", mpBold, 300, 300, Red)
+}
+
+func setupPage(screen *ebiten.Image) {
+	text.Draw(screen, "setup not implemented yet!", mpBold, 300, 300, Red)
+}
+
+func settingsPage(screen *ebiten.Image) {
+	text.Draw(screen, "settings not implemented yet!", mpBold, 300, 300, Red)
+}
+
 // About Page
 func aboutPage(screen *ebiten.Image) {
 	screen.Fill(FullWhite)
@@ -51,18 +74,17 @@ func aboutPage(screen *ebiten.Image) {
 		"- M+ Fonts: https://github.com/coz-m/MPLUS_FONTS\n" +
 		"- Gonum: https://github.com/gonum/gonum"
 	text.Draw(screen, thanksList, mpRegular, 25, int(math.Round(ScreenHeight/2.2)), FullBlack)
-	newButton := &Button{
-		posX:        800,
-		posY:        800,
-		width:       150,
-		height:      100,
-		text:        "button",
-		font:        mpRegular,
-		bgColor:     Crust,
-		textColor:   FullBlack,
-		state:       idle,
-		handlerFunc: func() { fmt.Println("clicked") },
-	}
-	newButton.drawButton(screen)
-
+	// newButton := &Button{
+	// 	posX:        800,
+	// 	posY:        800,
+	// 	width:       150,
+	// 	height:      100,
+	// 	text:        "button",
+	// 	font:        mpRegular,
+	// 	bgColor:     Crust,
+	// 	textColor:   FullBlack,
+	// 	state:       idle,
+	// 	handlerFunc: func() { fmt.Println("clicked") },
+	// }
+	// newButton.drawButton(screen)
 }

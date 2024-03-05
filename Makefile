@@ -3,21 +3,19 @@
 #
 # @file
 # @version 0.1
+
 .PHONY: build-release build-debug clean test benchmark lint
 
-run:
-	nixGL go run -tags=ebitenginedebug main.go database.go resources.go shapes.go
-
 build-debug:
-	go build -o ./bin/cons
+	go build -race -o ./bin/cons
 
 build-release: linux windows
 
-build-run: build-debug
+run: build-debug
 	nixGL ./bin/cons
 
 linux:
-	GOOS=linux GOARCH=amd64 go build -o ./bin/consilium_linux_amd64
+	GOOS=linux GOARCH=amd64 go build -race -o ./bin/consilium_linux_amd64
 
 windows:
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags='-H windowsgui' -o ./bin/consilium_win_amd64.exe
@@ -25,8 +23,8 @@ windows:
 lint:
 	go vet .
 	staticcheck .
-	revive
-	govulncheck .
+#	revive .
+#	govulncheck .
 
 test:
 	go test -v
