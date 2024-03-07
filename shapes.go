@@ -2,7 +2,6 @@ package main
 
 import (
 	"image/color"
-	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
@@ -30,17 +29,15 @@ type Button struct {
 	handlerFunc func()
 }
 
-func (b *Button) buttonClick(screen *ebiten.Image) {
-	cursorX, cursorY := ebiten.CursorPosition()
+func (b *Button) buttonClick(screen *ebiten.Image, cursorX int, cursorY int) {
 	if cursorX >= b.posX && cursorX <= b.posX+b.width && cursorY >= b.posY && cursorY <= b.posY+b.height {
 		b.state = clicked
 		b.handlerFunc()
 		b.drawButtonState(screen)
-		go func() {
-			time.Sleep(time.Second * 1)
+	} else {
+		if b.state != idle {
 			b.state = idle
-			b.drawButtonState(screen)
-		}()
+		}
 	}
 }
 

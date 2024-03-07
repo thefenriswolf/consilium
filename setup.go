@@ -38,9 +38,9 @@ func windowSetup() {
 }
 
 // general image loader
-func imageLoader() *ebiten.Image {
+func imageLoader(im IMG) *ebiten.Image {
 	var imageBuffer image.Image
-	file, err := Resources.ReadFile(images[0])
+	file, err := Resources.ReadFile(images[im])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -110,6 +110,7 @@ func (g *Game) testContent(screen *ebiten.Image) {
 		handlerFunc: func() { text.Draw(screen, "clicked", mpRegular, 500, 500, FullBlack) },
 	}
 	newButton.drawButton(screen)
+
 	g.drawRect(screen, 200, 100, 300, 200, 14, Lavender, Antialias, true)
 	g.drawRect(screen, 300, 200, 300, 200, 14, Lavender, Antialias, false)
 	g.drawCirc(screen, 100, 100, 50, 2, Peach, Antialias, true)
@@ -121,7 +122,7 @@ func (g *Game) testContent(screen *ebiten.Image) {
 	cursorX, cursorY := ebiten.CursorPosition()
 	var msg string
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		newButton.buttonClick(screen)
+		newButton.buttonClick(screen, cursorX, cursorY)
 		msg = fmt.Sprintf("TPS: %0.2f\nKey: \n%s\nX: %d, Y: %d\n", ebiten.ActualTPS(), keys, cursorX, cursorY)
 	} else {
 		newButton.state = idle

@@ -9,12 +9,14 @@ import (
 	"golang.org/x/image/font"
 )
 
+type IMG uint8
+
 const (
 	// program title or name
 	WindowTitle = "consilium"
 
 	// release version
-	Version = "v20240304-pre-alpha"
+	Version = "v20240307-pre-alpha"
 
 	//TPS
 	TPS = 30
@@ -30,9 +32,18 @@ const (
 	ScreenHeight = 1080
 )
 
+const (
+	logo IMG = iota
+	thanks
+)
+
 var (
 	// baked files
+
+	// images used throughout the program
+	// keep list in sync with IMG iota
 	images = []string{
+		"assets/consilium_logo.png",
 		"assets/consilium_thanks.png",
 	}
 	// LOGOS
@@ -69,6 +80,9 @@ var (
 	// bundled stuff
 	//go:embed assets/*
 	Resources embed.FS
+
+	// current page tracker
+	CurrentPage Page
 )
 
 // colors used throughout iplan
