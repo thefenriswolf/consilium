@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"image/color"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -9,75 +10,75 @@ import (
 	"golang.org/x/image/font"
 )
 
-type Page uint8
-
-const (
-	About Page = iota
-	Setup
-	Calendar
-	Export
-	Settings
-)
-
 func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
+	const buttonWidth int = 200
+	const buttonHeight int = 50
+	const buttonStartY int = 5
+	const buttonDefaultState State = idle
+	var buttonFont font.Face = mpRegular
+	var buttonBGColor color.RGBA = Crust
+	var buttonTextColor color.RGBA = FullBlack
+	buttonStartX := ((ScreenWidth - (5 * buttonWidth)) / 5) / 2
+	buttonDistance := ScreenWidth / 5
+
 	AboutButton := new(Button)
-	AboutButton.posX = 30
-	AboutButton.posY = 5
-	AboutButton.width = 210
-	AboutButton.height = 50
-	AboutButton.text = "About"
-	AboutButton.font = mpRegular
-	AboutButton.bgColor = Crust
-	AboutButton.textColor = FullBlack
-	AboutButton.state = idle
+	AboutButton.posX = buttonStartX
+	AboutButton.posY = buttonStartY
+	AboutButton.width = buttonWidth
+	AboutButton.height = buttonHeight
+	AboutButton.text = aboutPageTitle
+	AboutButton.font = buttonFont
+	AboutButton.bgColor = buttonBGColor
+	AboutButton.textColor = buttonTextColor
+	AboutButton.state = buttonDefaultState
 	AboutButton.handlerFunc = func() { CurrentPage = About }
 
 	SetupButton := new(Button)
-	SetupButton.posX = 245
-	SetupButton.posY = 5
-	SetupButton.width = 200
-	SetupButton.height = 50
-	SetupButton.text = "Setup"
-	SetupButton.font = mpRegular
-	SetupButton.bgColor = Crust
-	SetupButton.textColor = FullBlack
-	SetupButton.state = idle
+	SetupButton.posX = AboutButton.posX + buttonDistance
+	SetupButton.posY = buttonStartY
+	SetupButton.width = buttonWidth
+	SetupButton.height = buttonHeight
+	SetupButton.text = setupPageTitle
+	SetupButton.font = buttonFont
+	SetupButton.bgColor = buttonBGColor
+	SetupButton.textColor = buttonTextColor
+	SetupButton.state = buttonDefaultState
 	SetupButton.handlerFunc = func() { CurrentPage = Setup }
 
 	CalendarButton := new(Button)
-	CalendarButton.posX = 450
-	CalendarButton.posY = 5
-	CalendarButton.width = 200
-	CalendarButton.height = 50
-	CalendarButton.text = "Calendar"
-	CalendarButton.font = mpRegular
-	CalendarButton.bgColor = Crust
-	CalendarButton.textColor = FullBlack
-	CalendarButton.state = idle
+	CalendarButton.posX = SetupButton.posX + buttonDistance
+	CalendarButton.posY = buttonStartY
+	CalendarButton.width = buttonWidth
+	CalendarButton.height = buttonHeight
+	CalendarButton.text = calendarPageTitle
+	CalendarButton.font = buttonFont
+	CalendarButton.bgColor = buttonBGColor
+	CalendarButton.textColor = buttonTextColor
+	CalendarButton.state = buttonDefaultState
 	CalendarButton.handlerFunc = func() { CurrentPage = Calendar }
 
 	ExportButton := new(Button)
-	ExportButton.posX = 655
-	ExportButton.posY = 5
-	ExportButton.width = 200
-	ExportButton.height = 50
-	ExportButton.text = "Export"
-	ExportButton.font = mpRegular
-	ExportButton.bgColor = Crust
-	ExportButton.textColor = FullBlack
-	ExportButton.state = idle
+	ExportButton.posX = CalendarButton.posX + buttonDistance
+	ExportButton.posY = buttonStartY
+	ExportButton.width = buttonWidth
+	ExportButton.height = buttonHeight
+	ExportButton.text = exportPageTitle
+	ExportButton.font = buttonFont
+	ExportButton.bgColor = buttonBGColor
+	ExportButton.textColor = buttonTextColor
+	ExportButton.state = buttonDefaultState
 	ExportButton.handlerFunc = func() { CurrentPage = Export }
 
 	SettingsButton := new(Button)
-	SettingsButton.posX = 850
-	SettingsButton.posY = 5
-	SettingsButton.width = 200
-	SettingsButton.height = 50
-	SettingsButton.text = "Settings"
-	SettingsButton.font = mpRegular
-	SettingsButton.bgColor = Crust
-	SettingsButton.textColor = FullBlack
-	SettingsButton.state = idle
+	SettingsButton.posX = ExportButton.posX + buttonDistance
+	SettingsButton.posY = buttonStartY
+	SettingsButton.width = buttonWidth
+	SettingsButton.height = buttonHeight
+	SettingsButton.text = settingsPageTitle
+	SettingsButton.font = buttonFont
+	SettingsButton.bgColor = buttonBGColor
+	SettingsButton.textColor = buttonTextColor
+	SettingsButton.state = buttonDefaultState
 	SettingsButton.handlerFunc = func() { CurrentPage = Settings }
 
 	return AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton
@@ -101,7 +102,8 @@ func pageSelector(screen *ebiten.Image, page Page) {
 }
 
 func exportPage(screen *ebiten.Image) {
-	text.Draw(screen, "export not implemented yet!", mpBold, 300, 300, Red)
+	txt := notImplementedYet + "export"
+	text.Draw(screen, txt, mpBold, 300, 300, Red)
 	AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton := initNavButtons()
 	AboutButton.drawButton(screen)
 	CalendarButton.drawButton(screen)
@@ -119,7 +121,8 @@ func exportPage(screen *ebiten.Image) {
 }
 
 func calendarPage(screen *ebiten.Image) {
-	text.Draw(screen, "calendar not implemented yet!", mpBold, 300, 300, Red)
+	txt := notImplementedYet + "calendar"
+	text.Draw(screen, txt, mpBold, 300, 300, Red)
 	AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton := initNavButtons()
 	AboutButton.drawButton(screen)
 	CalendarButton.drawButton(screen)
@@ -137,7 +140,8 @@ func calendarPage(screen *ebiten.Image) {
 }
 
 func setupPage(screen *ebiten.Image) {
-	text.Draw(screen, "setup not implemented yet!", mpBold, 300, 300, Red)
+	txt := notImplementedYet + "setup"
+	text.Draw(screen, txt, mpBold, 300, 300, Red)
 	AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton := initNavButtons()
 	AboutButton.drawButton(screen)
 	CalendarButton.drawButton(screen)
@@ -155,7 +159,8 @@ func setupPage(screen *ebiten.Image) {
 }
 
 func settingsPage(screen *ebiten.Image) {
-	text.Draw(screen, "settings not implemented yet!", mpBold, 300, 300, Red)
+	txt := notImplementedYet + "settings"
+	text.Draw(screen, txt, mpBold, 300, 300, Red)
 	AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton := initNavButtons()
 	AboutButton.drawButton(screen)
 	CalendarButton.drawButton(screen)
@@ -174,26 +179,19 @@ func settingsPage(screen *ebiten.Image) {
 
 // About Page
 func aboutPage(screen *ebiten.Image) {
-	screen.Fill(FullWhite)
-
 	heading := fmt.Sprintf("%s: %s", WindowTitle, Version)
 	centerWindow := ScreenWidth / 2
 	headingBounds, _ := font.BoundString(mpExtraBold, heading)
 	centerHeading := ((headingBounds.Max.X - headingBounds.Min.X) / 2).Round()
 	headingX := centerWindow - centerHeading
 
-	thanksImage := imageLoader(thanks)
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Scale(0.4, 0.4)
 	op.GeoM.Translate(20, 40)
 	screen.DrawImage(thanksImage, op)
 	text.Draw(screen, heading, mpExtraBold, headingX, 120, FullBlack)
-	text.Draw(screen, "Special Thanks to:\n", mpBold, 45, int(float32(ScreenHeight)/2.5), FullBlack)
-	thanksList := "- bbolt: https://github.com/etcd-io/bbolt\n" +
-		"- Ebitengine: https://github.com/hajimehoshi/ebiten\n" +
-		"- M+ Fonts: https://github.com/coz-m/MPLUS_FONTS\n" +
-		"- Gonum: https://github.com/gonum/gonum"
-	text.Draw(screen, thanksList, mpRegular, 55, int(math.Round(ScreenHeight/2.2)), FullBlack)
+	text.Draw(screen, thankYouText, mpBold, 45, int(float32(ScreenHeight)/2.5), FullBlack)
+	text.Draw(screen, thanksList, mpRegular, 55, int(math.Round(float64(ScreenHeight)/2.2)), FullBlack)
 
 	AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton := initNavButtons()
 	AboutButton.drawButton(screen)

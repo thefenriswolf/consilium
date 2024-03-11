@@ -4,37 +4,104 @@ import (
 	"embed"
 	"image"
 	"image/color"
-	"sync"
 
+	"github.com/hajimehoshi/ebiten/v2"
+	bolt "go.etcd.io/bbolt"
 	"golang.org/x/image/font"
 )
 
+// IMG type for iota
 type IMG uint8
-
-const (
-	// program title or name
-	WindowTitle = "consilium"
-
-	// release version
-	Version = "v20240307-pre-alpha"
-
-	//TPS
-	TPS = 30
-
-	// enable/disable antialiasing
-	Antialias = true
-
-	// recommended by golang opentype package
-	fontDPI = 72
-
-	// initial screen size
-	ScreenWidth  = 1920
-	ScreenHeight = 1080
-)
 
 const (
 	logo IMG = iota
 	thanks
+)
+
+// LANG type for iota
+type LANG uint8
+
+const (
+	// EN : English
+	EN LANG = iota
+	// GER : German
+	GER
+)
+
+// Page type for iota
+type Page uint8
+
+const (
+	About Page = iota
+	Setup
+	Calendar
+	Export
+	Settings
+)
+
+// CurrentPage tracker
+// defaults to 0 = About
+var CurrentPage Page
+
+const (
+	// WindowTitle defines the program title or name
+	WindowTitle = "consilium"
+
+	// Version defines the release string
+	Version = "v20240311-pre-alpha"
+
+	// TPS or FPS which are desired
+	TPS = 30
+
+	// Antialias enables/disables antialiasing
+	Antialias = true
+
+	// fontDPI recommended by golang opentype package
+	fontDPI = 72
+
+	// LANGUAGE to use for the entire program
+	// currently supported: (EN, GER)
+	LANGUAGE = EN
+)
+
+// internationalization
+const (
+	// Unilang
+	thanksList = "- bbolt: https://github.com/etcd-io/bbolt\n" +
+		"- Ebitengine: https://github.com/hajimehoshi/ebiten\n" +
+		"- M+ Fonts: https://github.com/coz-m/MPLUS_FONTS\n" +
+		"- Gonum: https://github.com/gonum/gonum"
+
+	// ENGLISH
+	// pages
+	aboutPageEN         = "About"
+	setupPageEN         = "Setup"
+	calendarPageEN      = "Calendar"
+	exportPageEN        = "Export"
+	settingsPageEN      = "Settings"
+	notImplementedYetEN = "Not implemented yet: "
+	thankYouEN          = "Special Thanks to:\n"
+
+	// GERMAN
+	//pages
+	aboutPageGER         = "Über"
+	setupPageGER         = "Einrichtung"
+	calendarPageGER      = "Kalender"
+	exportPageGER        = "Export"
+	settingsPageGER      = "Einstellungen"
+	notImplementedYetGER = "Noch nicht verfügbar: "
+	thankYouGER          = "Wir bedanken uns bei:\n"
+)
+
+var (
+	// Pages
+	aboutPageTitle    string
+	setupPageTitle    string
+	calendarPageTitle string
+	exportPageTitle   string
+	settingsPageTitle string
+	thankYouText      string
+	notImplementedYet string
 )
 
 var (
@@ -46,16 +113,18 @@ var (
 		"assets/consilium_logo.png",
 		"assets/consilium_thanks.png",
 	}
-	// LOGOS
-	listOfLogos = [3]string{
+	thanksImage *ebiten.Image
+
+	// listOfLogos: logos that ebiten uses automatically
+	listOfLogos = []string{
 		"assets/logo16x16.png",
 		"assets/logo32x32.png",
 		"assets/logo64x64.png"}
-	// variable to hold all logo PNG files
+	// Logos: variable to hold all logo PNG files
 	Logos []image.Image
 
 	// Fonts
-	mplus2Fonts = [9]string{
+	mplus2Fonts = []string{
 		"assets/fonts/otf/Mplus2-Black.otf",
 		"assets/fonts/otf/Mplus2-Bold.otf",
 		"assets/fonts/otf/Mplus2-ExtraBold.otf",
@@ -68,7 +137,7 @@ var (
 
 	// globaly availabe fonts
 	mpRegular font.Face // MPlus regular
-	// mpBlack      font.Face
+	//mpBlack     font.Face
 	mpBold      font.Face
 	mpExtraBold font.Face
 	// mpExtraLight font.Face
@@ -77,18 +146,18 @@ var (
 	// mpSemiBold   font.Face
 	// mpThin       font.Face
 
-	// bundled stuff
+	// Resources: bundled assets
 	//go:embed assets/*
 	Resources embed.FS
 
-	// current page tracker
-	CurrentPage Page
+	// DB: database entry point
+	DB *bolt.DB
 )
 
 // colors used throughout iplan
 var (
 	Purple color.RGBA = color.RGBA{255, 0, 255, 255}
-	// source: catppuccin latte
+	// catppuccin latte
 	Rosewater color.RGBA = color.RGBA{220, 138, 120, 255}
 	Flamingo  color.RGBA = color.RGBA{221, 120, 120, 255}
 	Pink      color.RGBA = color.RGBA{234, 118, 203, 255}
@@ -120,26 +189,9 @@ var (
 	FullBlack color.RGBA = color.RGBA{0, 0, 0, 255}
 )
 
-// boilerplate ebiten function: init stuff
-func init() {
-	var wg sync.WaitGroup
-	wg.Add(2)
-	go func() {
-		Logos = logoLoader()
-		wg.Done()
-	}()
-	go func() {
-		mpRegular = fontLoader(30, "Regular")
-		// mpBlack = fontLoader(30, "Black")
-		mpBold = fontLoader(30, "Bold")
-		mpExtraBold = fontLoader(70, "ExtraBold")
-		// mpExtraLight = fontLoader(30, "ExtraLight")
-		// mpLight = fontLoader(30, "Light")
-		// mpMedium = fontLoader(30, "Medium")
-		// mpSemiBold = fontLoader(30, "SemiBold")
-		// mpThin = fontLoader(30, "Thin")
-		wg.Done()
-	}()
-	wg.Wait()
-	//WriteDB("test/dev.db", "devbucket", "devkey", []byte("devdata"))
-}
+var (
+	// ScreenWidth: initial screen size: x-axis
+	ScreenWidth = 1920
+	// ScreenHeight: initial screen size: y-axis
+	ScreenHeight = 1080
+)

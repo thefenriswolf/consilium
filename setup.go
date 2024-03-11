@@ -2,26 +2,31 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"image"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text"
-	"golang.org/x/image/colornames"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
 )
 
-// boilerplate ebiten game struct
+// Game is the boilerplate ebiten game struct
 type Game struct {
-	keys []ebiten.Key
+	keys                 []ebiten.Key
+	windowClosingHandled bool
 }
 
-// game struct constructor
+// NewInstance is the constructor for the game object
 func NewInstance() *Game {
 	return &Game{}
+}
+
+// handle user trying to close the window
+func windowClosingHandler() {
+	DB.Close()
+	time.Sleep(time.Second * 1)
 }
 
 // setup window
@@ -34,7 +39,8 @@ func windowSetup() {
 	ebiten.SetWindowClosingHandled(false)                          // do stuff when window is about to be closed
 	ebiten.SetWindowFloating(true)                                 // set default window state
 	ebiten.SetWindowTitle(WindowTitle)                             // set window title
-	ebiten.MaximizeWindow()
+	ebiten.MaximizeWindow()                                        // maximize window on opening
+	ebiten.SetWindowClosingHandled(true)                           // interrupt window closing
 }
 
 // general image loader
@@ -94,39 +100,39 @@ func fontLoader(size int, kind string) font.Face {
 	return loadedFont
 }
 
-// a bunch of test content to try drawing
-func (g *Game) testContent(screen *ebiten.Image) {
-	screen.Fill(colornames.White)
-	newButton := &Button{
-		posX:        800,
-		posY:        800,
-		width:       100,
-		height:      100,
-		text:        "test",
-		font:        mpRegular,
-		bgColor:     FullWhite,
-		textColor:   FullBlack,
-		state:       idle,
-		handlerFunc: func() { text.Draw(screen, "clicked", mpRegular, 500, 500, FullBlack) },
-	}
-	newButton.drawButton(screen)
+// // a bunch of test content to try drawing
+// func (g *Game) testContent(screen *ebiten.Image) {
+// 	screen.Fill(colornames.White)
+// 	newButton := &Button{
+// 		posX:        800,
+// 		posY:        800,
+// 		width:       100,
+// 		height:      100,
+// 		text:        "test",
+// 		font:        mpRegular,
+// 		bgColor:     FullWhite,
+// 		textColor:   FullBlack,
+// 		state:       idle,
+// 		handlerFunc: func() { text.Draw(screen, "clicked", mpRegular, 500, 500, FullBlack) },
+// 	}
+// 	newButton.drawButton(screen)
 
-	g.drawRect(screen, 200, 100, 300, 200, 14, Lavender, Antialias, true)
-	g.drawRect(screen, 300, 200, 300, 200, 14, Lavender, Antialias, false)
-	g.drawCirc(screen, 100, 100, 50, 2, Peach, Antialias, true)
-	g.drawCirc(screen, 400, 400, 50, 2, Mauve, Antialias, false)
-	var keys []string
-	for _, k := range g.keys {
-		keys = append(keys, k.String())
-	}
-	cursorX, cursorY := ebiten.CursorPosition()
-	var msg string
-	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		newButton.buttonClick(screen, cursorX, cursorY)
-		msg = fmt.Sprintf("TPS: %0.2f\nKey: \n%s\nX: %d, Y: %d\n", ebiten.ActualTPS(), keys, cursorX, cursorY)
-	} else {
-		newButton.state = idle
-		msg = fmt.Sprintf("TPS: %0.2f\nKey: \n%s\n", ebiten.ActualTPS(), keys)
-	}
-	text.Draw(screen, msg, mpRegular, 40, 40, Sky)
-}
+// 	g.drawRect(screen, 200, 100, 300, 200, 14, Lavender, Antialias, true)
+// 	g.drawRect(screen, 300, 200, 300, 200, 14, Lavender, Antialias, false)
+// 	g.drawCirc(screen, 100, 100, 50, 2, Peach, Antialias, true)
+// 	g.drawCirc(screen, 400, 400, 50, 2, Mauve, Antialias, false)
+// 	var keys []string
+// 	for _, k := range g.keys {
+// 		keys = append(keys, k.String())
+// 	}
+// 	cursorX, cursorY := ebiten.CursorPosition()
+// 	var msg string
+// 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+// 		newButton.buttonClick(screen, cursorX, cursorY)
+// 		msg = fmt.Sprintf("TPS: %0.2f\nKey: \n%s\nX: %d, Y: %d\n", ebiten.ActualTPS(), keys, cursorX, cursorY)
+// 	} else {
+// 		newButton.state = idle
+// 		msg = fmt.Sprintf("TPS: %0.2f\nKey: \n%s\n", ebiten.ActualTPS(), keys)
+// 	}
+// 	text.Draw(screen, msg, mpRegular, 40, 40, Sky)
+// }

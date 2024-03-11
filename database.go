@@ -2,21 +2,22 @@ package main
 
 import (
 	"errors"
-	bolt "go.etcd.io/bbolt"
 	"log"
+
+	bolt "go.etcd.io/bbolt"
 )
 
-func dbOpen(dbname string) *bolt.DB {
-	db, err := bolt.Open(dbname, 0600, nil)
+func dbOpen(dbname string) {
+	var err error
+	DB, err = bolt.Open(dbname, 0600, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return db
 }
 
-func dbTx(db *bolt.DB) *bolt.Tx {
+func dbTx() *bolt.Tx {
 	// start transaction
-	tx, err := db.Begin(true)
+	tx, err := DB.Begin(true)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,8 +51,8 @@ func dbCommit(transaction *bolt.Tx) {
 	}
 }
 
-func dbInsert(db *bolt.DB, bucketname string, key string, data []byte) error {
-	transaction := dbTx(db)
+func dbInsert(bucketname string, key string, data []byte) error {
+	transaction := dbTx()
 	defer transaction.Rollback()
 	bucket := dbBucketCreate(transaction, bucketname)
 	success := dbInsertKVPair(bucket, key, data)
@@ -62,11 +63,11 @@ func dbInsert(db *bolt.DB, bucketname string, key string, data []byte) error {
 	return nil
 }
 
+// WriteDB is a wrapper for opening the DB and writing some test data
 func WriteDB(dbname string, bucketname string, key string, data []byte) {
-	db := dbOpen(dbname)
+	dbOpen(dbname)
 
-	defer db.Close()
-	err := dbInsert(db, bucketname, key, data)
+	err := dbInsert(bucketname, key, data)
 	if err != nil {
 		log.Fatal(err)
 	}
