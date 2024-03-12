@@ -1,15 +1,10 @@
 package main
 
 import (
-	"bytes"
-	"image"
-	"log"
-	"strings"
-	"time"
+	"sync"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"golang.org/x/image/font"
-	"golang.org/x/image/font/opentype"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 // Game is the boilerplate ebiten game struct
@@ -19,14 +14,63 @@ type Game struct {
 }
 
 // NewInstance is the constructor for the game object
-func NewInstance() *Game {
+func newInstance() *Game {
 	return &Game{}
 }
 
-// handle user trying to close the window
-func windowClosingHandler() {
-	DB.Close()
-	time.Sleep(time.Second * 1)
+func setLanguageStrings(LANGUAGE LANG) {
+	if LANGUAGE == EN {
+		aboutPageTitle = aboutPageEN
+		setupPageTitle = setupPageEN
+		calendarPageTitle = calendarPageEN
+		exportPageTitle = exportPageEN
+		settingsPageTitle = settingsPageEN
+		thankYouText = thankYouEN
+		notImplementedYet = notImplementedYetEN
+	}
+	if LANGUAGE == GER {
+		aboutPageTitle = aboutPageGER
+		setupPageTitle = setupPageGER
+		calendarPageTitle = calendarPageGER
+		exportPageTitle = exportPageGER
+		settingsPageTitle = settingsPageGER
+		thankYouText = thankYouGER
+		notImplementedYet = notImplementedYetGER
+	}
+}
+
+// boilerplate ebiten function: init stuff
+func init() {
+	KBDC = newKBDCursor()
+
+	var wg sync.WaitGroup
+	wg.Add(4)
+	go func() {
+		setLanguageStrings(LANGUAGE)
+		wg.Done()
+	}()
+	go func() {
+		Logos = logoLoader()
+		wg.Done()
+	}()
+	go func() {
+		thanksImage = imageLoader(thanks)
+		wg.Done()
+	}()
+	go func() {
+		mpRegular = fontLoader(30, "Regular")
+		//mpBlack = fontLoader(30, "Black")
+		mpBold = fontLoader(30, "Bold")
+		mpExtraBold = fontLoader(70, "ExtraBold")
+		// mpExtraLight = fontLoader(30, "ExtraLight")
+		// mpLight = fontLoader(30, "Light")
+		// mpMedium = fontLoader(30, "Medium")
+		// mpSemiBold = fontLoader(30, "SemiBold")
+		// mpThin = fontLoader(30, "Thin")
+		wg.Done()
+	}()
+	wg.Wait()
+	WriteDB("test/dev.DB", "devbucket", "devkey", []byte("devdata"))
 }
 
 // setup window
@@ -43,61 +87,43 @@ func windowSetup() {
 	ebiten.SetWindowClosingHandled(true)                           // interrupt window closing
 }
 
-// general image loader
-func imageLoader(im IMG) *ebiten.Image {
-	var imageBuffer image.Image
-	file, err := Resources.ReadFile(images[im])
-	if err != nil {
-		log.Fatal(err)
-	}
-	imageBuffer, _, err = image.Decode(bytes.NewReader(file))
-	if err != nil {
-		log.Fatal(err)
-	}
-	return ebiten.NewImageFromImage(imageBuffer)
+// game object
+var (
+	g = newInstance()
+)
+
+// Layout is a boilerplate ebiten function: returns screen size
+func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
+	return ScreenWidth, ScreenHeight
 }
 
-// load logos from resources
-func logoLoader() []image.Image {
-	var logoBuffer []image.Image
-	for i := range listOfLogos {
-		file, err := Resources.ReadFile(listOfLogos[i])
-		if err != nil {
-			log.Fatal(err)
-		}
-		logo, _, err := image.Decode(bytes.NewReader(file))
-		if err != nil {
-			log.Fatal(err)
-		}
-		logoBuffer = append(logoBuffer, logo)
+// Update is a boilerplate ebiten function: runs every tick/frame
+func (g *Game) Update() error {
+	g.keys = inpututil.AppendPressedKeys(g.keys[:0])
+
+	// handle window closing
+	if ebiten.IsWindowBeingClosed() {
+		g.windowClosingHandled = true
 	}
-	return logoBuffer
+	if g.windowClosingHandled {
+		// make window closing wait for program save and cleanup
+		var wg sync.WaitGroup
+		wg.Add(1)
+		go func() {
+			windowClosingHandler()
+			wg.Done()
+		}()
+		wg.Wait()
+		return ebiten.Termination
+	}
+	return nil
 }
 
-// load fonts from resources
-func fontLoader(size int, kind string) font.Face {
-	var loadedFont font.Face
-	for i := range mplus2Fonts {
-		file, err := Resources.ReadFile(mplus2Fonts[i])
-		if err != nil {
-			log.Fatal(err)
-		}
-		s, err := opentype.Parse(file)
-		if err != nil {
-			log.Fatal(err)
-		}
-		if strings.Contains(mplus2Fonts[i], kind) {
-			loadedFont, err = opentype.NewFace(s, &opentype.FaceOptions{
-				Size:    float64(size),
-				DPI:     fontDPI,
-				Hinting: font.HintingFull,
-			})
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-	}
-	return loadedFont
+// Draw is a boilerplate ebiten function: draws stuff to screen once
+func (g *Game) Draw(screen *ebiten.Image) {
+	screen.Fill(FullWhite)
+	pageSelector(screen, CurrentPage)
+	//g.testContent(screen)
 }
 
 // // a bunch of test content to try drawing

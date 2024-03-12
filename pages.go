@@ -28,7 +28,7 @@ func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
 		buttonStartX   int = ((ScreenWidth - (5 * buttonWidth)) / 5) / 2
 		buttonDistance int = ScreenWidth / 5
 	)
-	AboutButton := new(Button)
+	AboutButton := newButton()
 	AboutButton.posX = buttonStartX
 	AboutButton.posY = buttonStartY
 	AboutButton.width = buttonWidth
@@ -43,7 +43,7 @@ func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
 	AboutButton.state = buttonDefaultState
 	AboutButton.handlerFunc = func() { CurrentPage = About }
 
-	SetupButton := new(Button)
+	SetupButton := newButton()
 	SetupButton.posX = AboutButton.posX + buttonDistance
 	SetupButton.posY = buttonStartY
 	SetupButton.width = buttonWidth
@@ -58,7 +58,7 @@ func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
 	SetupButton.state = buttonDefaultState
 	SetupButton.handlerFunc = func() { CurrentPage = Setup }
 
-	CalendarButton := new(Button)
+	CalendarButton := newButton()
 	CalendarButton.posX = SetupButton.posX + buttonDistance
 	CalendarButton.posY = buttonStartY
 	CalendarButton.width = buttonWidth
@@ -73,7 +73,7 @@ func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
 	CalendarButton.state = buttonDefaultState
 	CalendarButton.handlerFunc = func() { CurrentPage = Calendar }
 
-	ExportButton := new(Button)
+	ExportButton := newButton()
 	ExportButton.posX = CalendarButton.posX + buttonDistance
 	ExportButton.posY = buttonStartY
 	ExportButton.width = buttonWidth
@@ -88,7 +88,7 @@ func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
 	ExportButton.state = buttonDefaultState
 	ExportButton.handlerFunc = func() { CurrentPage = Export }
 
-	SettingsButton := new(Button)
+	SettingsButton := newButton()
 	SettingsButton.posX = ExportButton.posX + buttonDistance
 	SettingsButton.posY = buttonStartY
 	SettingsButton.width = buttonWidth
@@ -127,18 +127,18 @@ func exportPage(screen *ebiten.Image) {
 	txt := notImplementedYet + "export"
 	text.Draw(screen, txt, mpBold, 300, 300, Red)
 	AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton := initNavButtons()
-	AboutButton.drawButton(screen)
-	CalendarButton.drawButton(screen)
-	SettingsButton.drawButton(screen)
-	SetupButton.drawButton(screen)
-	ExportButton.drawButton(screen)
+	AboutButton.Draw(screen)
+	CalendarButton.Draw(screen)
+	SettingsButton.Draw(screen)
+	SetupButton.Draw(screen)
+	ExportButton.Draw(screen)
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		cursorX, cursorY := ebiten.CursorPosition()
-		AboutButton.buttonClick(screen, cursorX, cursorY)
-		CalendarButton.buttonClick(screen, cursorX, cursorY)
-		SettingsButton.buttonClick(screen, cursorX, cursorY)
-		SetupButton.buttonClick(screen, cursorX, cursorY)
-		ExportButton.buttonClick(screen, cursorX, cursorY)
+		AboutButton.Click(screen, cursorX, cursorY)
+		CalendarButton.Click(screen, cursorX, cursorY)
+		SettingsButton.Click(screen, cursorX, cursorY)
+		SetupButton.Click(screen, cursorX, cursorY)
+		ExportButton.Click(screen, cursorX, cursorY)
 	}
 }
 
@@ -146,18 +146,18 @@ func calendarPage(screen *ebiten.Image) {
 	txt := notImplementedYet + "calendar"
 	text.Draw(screen, txt, mpBold, 300, 300, Red)
 	AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton := initNavButtons()
-	AboutButton.drawButton(screen)
-	CalendarButton.drawButton(screen)
-	SettingsButton.drawButton(screen)
-	SetupButton.drawButton(screen)
-	ExportButton.drawButton(screen)
+	AboutButton.Draw(screen)
+	CalendarButton.Draw(screen)
+	SettingsButton.Draw(screen)
+	SetupButton.Draw(screen)
+	ExportButton.Draw(screen)
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		cursorX, cursorY := ebiten.CursorPosition()
-		AboutButton.buttonClick(screen, cursorX, cursorY)
-		CalendarButton.buttonClick(screen, cursorX, cursorY)
-		SettingsButton.buttonClick(screen, cursorX, cursorY)
-		SetupButton.buttonClick(screen, cursorX, cursorY)
-		ExportButton.buttonClick(screen, cursorX, cursorY)
+		AboutButton.Click(screen, cursorX, cursorY)
+		CalendarButton.Click(screen, cursorX, cursorY)
+		SettingsButton.Click(screen, cursorX, cursorY)
+		SetupButton.Click(screen, cursorX, cursorY)
+		ExportButton.Click(screen, cursorX, cursorY)
 	}
 }
 
@@ -165,18 +165,18 @@ func setupPage(screen *ebiten.Image) {
 	txt := notImplementedYet + "setup"
 	text.Draw(screen, txt, mpBold, 300, 300, Red)
 	AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton := initNavButtons()
-	AboutButton.drawButton(screen)
-	CalendarButton.drawButton(screen)
-	SettingsButton.drawButton(screen)
-	SetupButton.drawButton(screen)
-	ExportButton.drawButton(screen)
+	AboutButton.Draw(screen)
+	CalendarButton.Draw(screen)
+	SettingsButton.Draw(screen)
+	SetupButton.Draw(screen)
+	ExportButton.Draw(screen)
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		cursorX, cursorY := ebiten.CursorPosition()
-		AboutButton.buttonClick(screen, cursorX, cursorY)
-		CalendarButton.buttonClick(screen, cursorX, cursorY)
-		SettingsButton.buttonClick(screen, cursorX, cursorY)
-		SetupButton.buttonClick(screen, cursorX, cursorY)
-		ExportButton.buttonClick(screen, cursorX, cursorY)
+		AboutButton.Click(screen, cursorX, cursorY)
+		CalendarButton.Click(screen, cursorX, cursorY)
+		SettingsButton.Click(screen, cursorX, cursorY)
+		SetupButton.Click(screen, cursorX, cursorY)
+		ExportButton.Click(screen, cursorX, cursorY)
 	}
 }
 
@@ -184,13 +184,13 @@ func settingsPage(screen *ebiten.Image) {
 	txt := notImplementedYet + "settings"
 	text.Draw(screen, txt, mpBold, 300, 300, Red)
 	AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton := initNavButtons()
-	AboutButton.drawButton(screen)
-	CalendarButton.drawButton(screen)
-	SettingsButton.drawButton(screen)
-	SetupButton.drawButton(screen)
-	ExportButton.drawButton(screen)
+	AboutButton.Draw(screen)
+	CalendarButton.Draw(screen)
+	SettingsButton.Draw(screen)
+	SetupButton.Draw(screen)
+	ExportButton.Draw(screen)
 
-	TB := new(TextBox)
+	TB := newTextbox()
 	TB.posX = 400
 	TB.posY = 400
 	TB.width = 500
@@ -198,8 +198,7 @@ func settingsPage(screen *ebiten.Image) {
 	TB.border = 2
 	TB.focused = false
 	TB.borderColor = Mauve
-	TB.text = ""
-	TB.drawTextbox(screen)
+	TB.Draw(screen)
 
 	buttons := []*Button{
 		AboutButton,
@@ -229,18 +228,18 @@ func aboutPage(screen *ebiten.Image) {
 	text.Draw(screen, thanksList, mpRegular, 55, int(math.Round(float64(ScreenHeight)/2.2)), FullBlack)
 
 	AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton := initNavButtons()
-	AboutButton.drawButton(screen)
-	CalendarButton.drawButton(screen)
-	SettingsButton.drawButton(screen)
-	SetupButton.drawButton(screen)
-	ExportButton.drawButton(screen)
+	AboutButton.Draw(screen)
+	CalendarButton.Draw(screen)
+	SettingsButton.Draw(screen)
+	SetupButton.Draw(screen)
+	ExportButton.Draw(screen)
 
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		cursorX, cursorY := ebiten.CursorPosition()
-		AboutButton.buttonClick(screen, cursorX, cursorY)
-		CalendarButton.buttonClick(screen, cursorX, cursorY)
-		SettingsButton.buttonClick(screen, cursorX, cursorY)
-		SetupButton.buttonClick(screen, cursorX, cursorY)
-		ExportButton.buttonClick(screen, cursorX, cursorY)
+		AboutButton.Click(screen, cursorX, cursorY)
+		CalendarButton.Click(screen, cursorX, cursorY)
+		SettingsButton.Click(screen, cursorX, cursorY)
+		SetupButton.Click(screen, cursorX, cursorY)
+		ExportButton.Click(screen, cursorX, cursorY)
 	}
 }
