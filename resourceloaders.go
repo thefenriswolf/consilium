@@ -25,6 +25,8 @@ func setLanguageStrings(LANGUAGE LANG) {
 
 // boilerplate ebiten function: init stuff
 func init() {
+	KBDC = newKBDCursor()
+
 	var wg sync.WaitGroup
 	wg.Add(4)
 	go func() {

@@ -102,6 +102,8 @@ var (
 	settingsPageTitle string
 	thankYouText      string
 	notImplementedYet string
+
+	KBDC *kbdCursor
 )
 
 var (

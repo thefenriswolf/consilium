@@ -11,25 +11,35 @@ import (
 )
 
 func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
-	const buttonWidth int = 200
-	const buttonHeight int = 50
-	const buttonStartY int = 5
-	const buttonDefaultState State = idle
-	var buttonFont font.Face = mpRegular
-	var buttonBGColor color.RGBA = Crust
-	var buttonTextColor color.RGBA = FullBlack
-	buttonStartX := ((ScreenWidth - (5 * buttonWidth)) / 5) / 2
-	buttonDistance := ScreenWidth / 5
+	const (
+		buttonWidth        int   = 200
+		buttonHeight       int   = 50
+		buttonStartY       int   = 5
+		buttonBorder       int   = 3
+		buttonDefaultState State = idle
+	)
+	var (
+		buttonFont         font.Face  = mpRegular
+		buttonBGColor      color.RGBA = Crust
+		buttonTextColor    color.RGBA = FullBlack
+		buttonIdleColor    color.RGBA = Overlay2
+		buttonClickedColor color.RGBA = Blue
 
+		buttonStartX   int = ((ScreenWidth - (5 * buttonWidth)) / 5) / 2
+		buttonDistance int = ScreenWidth / 5
+	)
 	AboutButton := new(Button)
 	AboutButton.posX = buttonStartX
 	AboutButton.posY = buttonStartY
 	AboutButton.width = buttonWidth
 	AboutButton.height = buttonHeight
+	AboutButton.border = buttonBorder
 	AboutButton.text = aboutPageTitle
 	AboutButton.font = buttonFont
 	AboutButton.bgColor = buttonBGColor
 	AboutButton.textColor = buttonTextColor
+	AboutButton.idleColor = buttonIdleColor
+	AboutButton.clickedColor = buttonClickedColor
 	AboutButton.state = buttonDefaultState
 	AboutButton.handlerFunc = func() { CurrentPage = About }
 
@@ -38,10 +48,13 @@ func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
 	SetupButton.posY = buttonStartY
 	SetupButton.width = buttonWidth
 	SetupButton.height = buttonHeight
+	SetupButton.border = buttonBorder
 	SetupButton.text = setupPageTitle
 	SetupButton.font = buttonFont
 	SetupButton.bgColor = buttonBGColor
 	SetupButton.textColor = buttonTextColor
+	SetupButton.idleColor = buttonIdleColor
+	SetupButton.clickedColor = buttonClickedColor
 	SetupButton.state = buttonDefaultState
 	SetupButton.handlerFunc = func() { CurrentPage = Setup }
 
@@ -50,10 +63,13 @@ func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
 	CalendarButton.posY = buttonStartY
 	CalendarButton.width = buttonWidth
 	CalendarButton.height = buttonHeight
+	CalendarButton.border = buttonBorder
 	CalendarButton.text = calendarPageTitle
 	CalendarButton.font = buttonFont
 	CalendarButton.bgColor = buttonBGColor
 	CalendarButton.textColor = buttonTextColor
+	CalendarButton.idleColor = buttonIdleColor
+	CalendarButton.clickedColor = buttonClickedColor
 	CalendarButton.state = buttonDefaultState
 	CalendarButton.handlerFunc = func() { CurrentPage = Calendar }
 
@@ -62,10 +78,13 @@ func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
 	ExportButton.posY = buttonStartY
 	ExportButton.width = buttonWidth
 	ExportButton.height = buttonHeight
+	ExportButton.border = buttonBorder
 	ExportButton.text = exportPageTitle
 	ExportButton.font = buttonFont
 	ExportButton.bgColor = buttonBGColor
 	ExportButton.textColor = buttonTextColor
+	ExportButton.idleColor = buttonIdleColor
+	ExportButton.clickedColor = buttonClickedColor
 	ExportButton.state = buttonDefaultState
 	ExportButton.handlerFunc = func() { CurrentPage = Export }
 
@@ -74,10 +93,13 @@ func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
 	SettingsButton.posY = buttonStartY
 	SettingsButton.width = buttonWidth
 	SettingsButton.height = buttonHeight
+	SettingsButton.border = buttonBorder
 	SettingsButton.text = settingsPageTitle
 	SettingsButton.font = buttonFont
 	SettingsButton.bgColor = buttonBGColor
 	SettingsButton.textColor = buttonTextColor
+	SettingsButton.idleColor = buttonIdleColor
+	SettingsButton.clickedColor = buttonClickedColor
 	SettingsButton.state = buttonDefaultState
 	SettingsButton.handlerFunc = func() { CurrentPage = Settings }
 
@@ -167,13 +189,29 @@ func settingsPage(screen *ebiten.Image) {
 	SettingsButton.drawButton(screen)
 	SetupButton.drawButton(screen)
 	ExportButton.drawButton(screen)
+
+	TB := new(TextBox)
+	TB.posX = 400
+	TB.posY = 400
+	TB.width = 500
+	TB.height = 200
+	TB.border = 2
+	TB.focused = false
+	TB.borderColor = Mauve
+	TB.text = ""
+	TB.drawTextbox(screen)
+
+	buttons := []*Button{
+		AboutButton,
+		SetupButton,
+		CalendarButton,
+		ExportButton,
+		SettingsButton}
+
+	textfields := []*TextBox{TB}
+
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		cursorX, cursorY := ebiten.CursorPosition()
-		AboutButton.buttonClick(screen, cursorX, cursorY)
-		CalendarButton.buttonClick(screen, cursorX, cursorY)
-		SettingsButton.buttonClick(screen, cursorX, cursorY)
-		SetupButton.buttonClick(screen, cursorX, cursorY)
-		ExportButton.buttonClick(screen, cursorX, cursorY)
+		inputEventHandler(screen, true, false, buttons, textfields)
 	}
 }
 
