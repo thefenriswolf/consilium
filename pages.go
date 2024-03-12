@@ -180,10 +180,7 @@ func settingsPage(screen *ebiten.Image) {
 // About Page
 func aboutPage(screen *ebiten.Image) {
 	heading := fmt.Sprintf("%s: %s", WindowTitle, Version)
-	centerWindow := ScreenWidth / 2
-	headingBounds, _ := font.BoundString(mpExtraBold, heading)
-	centerHeading := ((headingBounds.Max.X - headingBounds.Min.X) / 2).Round()
-	headingX := centerWindow - centerHeading
+	headingX, _ := centerText(0, 0, ScreenWidth, ScreenHeight, heading, mpExtraBold)
 
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Scale(0.4, 0.4)

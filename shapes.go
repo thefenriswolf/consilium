@@ -59,13 +59,7 @@ func (b *Button) drawButtonState(screen *ebiten.Image) {
 // custom button function with state
 func (b *Button) drawButton(screen *ebiten.Image) {
 	var stateColor color.RGBA
-	boundsText, _ := font.BoundString(b.font, b.text)
-	centerTextY := ((boundsText.Max.Y + boundsText.Min.Y) / 2).Round()
-	centerTextX := ((boundsText.Max.X + boundsText.Min.X) / 2).Round()
-	centerButtonX := (b.posX + b.width) / 2.0
-	centerButtonY := (b.posY + b.height) / 2.0
-	textX := centerButtonX - centerTextX + (b.posX / 2)
-	textY := centerButtonY - centerTextY + b.posY
+	textX, textY := centerText(b.posX, b.posY, b.width, b.height, b.text, b.font)
 	if b.state == idle {
 		//	stateColor = Crust
 		stateColor = Purple
@@ -77,6 +71,18 @@ func (b *Button) drawButton(screen *ebiten.Image) {
 	vector.DrawFilledRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), b.bgColor, true)
 	vector.StrokeRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), 5, stateColor, true)
 	text.Draw(screen, b.text, b.font, textX, textY, b.textColor)
+}
+
+// centerText: center text in any frame of reference
+func centerText(frameX int, frameY int, frameWidth int, frameHeight int, text string, fnt font.Face) (int, int) {
+	boundsText, _ := font.BoundString(fnt, text)
+	centerTextY := ((boundsText.Max.Y + boundsText.Min.Y) / 2).Round()
+	centerTextX := ((boundsText.Max.X + boundsText.Min.X) / 2).Round()
+	centerButtonX := (frameX + frameWidth) / 2.0
+	centerButtonY := (frameY + frameHeight) / 2.0
+	textX := centerButtonX - centerTextX + (frameX / 2)
+	textY := centerButtonY - centerTextY + frameY
+	return textX, textY
 }
 
 // // wrapper function around filled and outlined Rectangle
