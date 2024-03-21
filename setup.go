@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
@@ -37,6 +39,72 @@ func setLanguageStrings(LANGUAGE LANG) {
 		thankYouText = thankYouGER
 		notImplementedYet = notImplementedYetGER
 	}
+}
+
+func InitB() {
+	KBDC = newKBDCursor()
+
+	var wg sync.WaitGroup
+	wg.Add(4)
+	go func() {
+		Logos = logoLoader()
+		wg.Done()
+	}()
+	go func() {
+		thanksImage = imageLoader(thanks)
+		wg.Done()
+	}()
+	go func() {
+		setLanguageStrings(LANGUAGE)
+		wg.Done()
+	}()
+	go func() {
+		mpRegular = fontLoader(30, "Regular")
+		//mpBlack = fontLoader(30, "Black")
+		mpBold = fontLoader(30, "Bold")
+		mpExtraBold = fontLoader(70, "ExtraBold")
+		// mpExtraLight = fontLoader(30, "ExtraLight")
+		// mpLight = fontLoader(30, "Light")
+		// mpMedium = fontLoader(30, "Medium")
+		// mpSemiBold = fontLoader(30, "SemiBold")
+		// mpThin = fontLoader(30, "Thin")
+		wg.Done()
+	}()
+	wg.Wait()
+	WriteDB("test/dev.DB", "devbucket", "devkey", []byte("devdata"))
+}
+
+func InitA() {
+	KBDC = newKBDCursor()
+
+	var wg sync.WaitGroup
+	wg.Add(4)
+	go func() {
+		setLanguageStrings(LANGUAGE)
+		wg.Done()
+	}()
+	go func() {
+		Logos = logoLoader()
+		wg.Done()
+	}()
+	go func() {
+		thanksImage = imageLoader(thanks)
+		wg.Done()
+	}()
+	go func() {
+		mpRegular = fontLoader(30, "Regular")
+		//mpBlack = fontLoader(30, "Black")
+		mpBold = fontLoader(30, "Bold")
+		mpExtraBold = fontLoader(70, "ExtraBold")
+		// mpExtraLight = fontLoader(30, "ExtraLight")
+		// mpLight = fontLoader(30, "Light")
+		// mpMedium = fontLoader(30, "Medium")
+		// mpSemiBold = fontLoader(30, "SemiBold")
+		// mpThin = fontLoader(30, "Thin")
+		wg.Done()
+	}()
+	wg.Wait()
+	WriteDB("test/dev.DB", "devbucket", "devkey", []byte("devdata"))
 }
 
 // boilerplate ebiten function: init stuff
@@ -122,6 +190,9 @@ func (g *Game) Update() error {
 // Draw is a boilerplate ebiten function: draws stuff to screen once
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(FullWhite)
+	FPS := ebiten.ActualFPS()
+	msg := fmt.Sprintf("FPS: %.f", FPS)
+	ebitenutil.DebugPrint(screen, msg)
 	pageSelector(screen, CurrentPage)
 	//g.testContent(screen)
 }

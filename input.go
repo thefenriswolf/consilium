@@ -2,7 +2,6 @@ package main
 
 import (
 	"sync"
-	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
@@ -11,7 +10,7 @@ import (
 // handle user trying to close the window
 func windowClosingHandler() {
 	DB.Close()
-	time.Sleep(time.Second * 1)
+	//time.Sleep(time.Second * 1)
 }
 
 func inputEventHandler(screen *ebiten.Image, mouseInput bool, kbdInput bool, buttons []*Button, textboxes []*TextBox) {

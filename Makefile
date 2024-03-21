@@ -6,13 +6,11 @@
 
 .PHONY: build-release build-debug clean test benchmark lint
 
-build-debug:
-	go build -race -o ./bin/cons
-
 build-release: linux windows
 
-run: build-debug
-	nixGL ./bin/cons
+run: build-release
+#	nixGL ./bin/cons_linux
+	wine64 bin/consilium_win_amd64.exe
 
 linux:
 	GOOS=linux GOARCH=amd64 go build -race -o ./bin/consilium_linux_amd64
@@ -23,8 +21,8 @@ windows:
 lint:
 	go vet .
 	staticcheck .
-#	revive .
-#	govulncheck .
+	revive .
+	govulncheck .
 
 test:
 	go test -v
@@ -35,7 +33,7 @@ benchmark:
 	go test -bench=. -benchmem -cpu=2 #-benchtime=10s
 
 clean:
-	rm -v ./bin/iplan_* ./bin/consilium* ./bin/cons*
+	rm -v ./bin/consilium* ./bin/cons*
 	rm -v ./test/*
 	rm *.db
 # end

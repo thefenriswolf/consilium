@@ -55,7 +55,7 @@ func (b *Button) Click(screen *ebiten.Image, cursorX int, cursorY int) {
 	if withinBounds(cursorX, cursorY, b.posX, b.posY, b.width, b.height) {
 		b.state = clicked
 		b.handlerFunc()
-		b.drawState(screen)
+		b.Update(screen)
 	} else {
 		if b.state != idle {
 			b.state = idle
@@ -63,7 +63,7 @@ func (b *Button) Click(screen *ebiten.Image, cursorX int, cursorY int) {
 	}
 }
 
-func (b *Button) drawState(screen *ebiten.Image) {
+func (b *Button) Update(screen *ebiten.Image) {
 	var stateColor color.RGBA
 	if b.state == idle {
 		//	stateColor = Crust
@@ -91,6 +91,46 @@ func (b *Button) Draw(screen *ebiten.Image) {
 	vector.DrawFilledRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), b.bgColor, true)
 	vector.StrokeRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), float32(b.border), stateColor, true)
 	text.Draw(screen, b.text, b.font, textX, textY, b.textColor)
+}
+
+// image Button object struct
+type IMGButton struct {
+	posX        int
+	posY        int
+	width       int
+	height      int
+	border      int
+	image       *ebiten.Image
+	imgScalingX float64
+	imgScalingY float64
+	borderColor color.Color
+	handlerFunc func()
+}
+
+// image button constructor function
+func newIMGButton(image *ebiten.Image, width int, height int) *IMGButton {
+	btn := new(IMGButton)
+	btn.posX = 400
+	btn.posY = 400
+	btn.width = width
+	btn.height = height
+	btn.border = 3
+	btn.image = image
+	imgheight := float64(btn.image.Bounds().Dy())
+	imgwidth := float64(btn.image.Bounds().Dx())
+	btn.imgScalingX = float64(btn.width) / imgwidth
+	btn.imgScalingY = float64(btn.height) / imgheight
+	btn.borderColor = FullBlack
+	return btn
+}
+
+// custom image button function with state
+func (b *IMGButton) Draw(screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(b.imgScalingX, b.imgScalingY)
+	op.GeoM.Translate(float64(b.posX), float64(b.posY))
+	screen.DrawImage(thanksImage, op)
+	vector.StrokeRect(screen, float32(b.posX), float32(b.posY), float32(b.width), float32(b.height), float32(b.border), b.borderColor, true)
 }
 
 type kbdCursor struct {
@@ -148,7 +188,6 @@ func (tb *TextBox) Focus(cursorX int, cursorY int) {
 
 func (tb *TextBox) Draw(screen *ebiten.Image) {
 	textX, textY := centerText(tb.posX, tb.posY, tb.width, tb.height, tb.text, tb.font)
-	//fmt.Printf("x:%d, y:%d, X:%d+%d, Y:%d+%d\n", textX, textY, tb.posX, tb.width, tb.posY, tb.height)
 	vector.StrokeRect(screen, float32(tb.posX), float32(tb.posY), float32(tb.width), float32(tb.height), float32(tb.border), tb.borderColor, true)
 	text.Draw(screen, tb.text, tb.font, textX, textY, tb.textColor)
 }

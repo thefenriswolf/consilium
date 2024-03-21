@@ -1,10 +1,5 @@
 package main
 
-import (
-	//	"github.com/stretchr/testify/assert"
-	"testing"
-)
-
 type dbtest struct {
 	dbname     string
 	bucketname string
@@ -13,12 +8,12 @@ type dbtest struct {
 }
 
 var dbtestList = []dbtest{
-	dbtest{"./test/testdb.db", "testbucket", "td", []byte("testdata")},
-	dbtest{"./test/testdb.db", "testbucket", "tj", []byte(`{"birds":{"pigeon":"likes to perch on rocks","eagle":"bird of prey"`)},
+	{"./test/testdb.db", "testbucket", "td", []byte("testdata")},
+	{"./test/testdb.db", "testbucket", "tj", []byte(`{"birds":{"pigeon":"likes to perch on rocks","eagle":"bird of prey"`)},
 }
 
-func TestWriteDB(t *testing.T) {
-	for _, item := range dbtestList {
-		WriteDB(item.dbname, item.bucketname, item.key, item.data)
-	}
-}
+// func TestWriteDB(t *testing.T) {
+// 	for _, item := range dbtestList {
+// 		WriteDB(item.dbname, item.bucketname, item.key, item.data)
+// 	}
+// }

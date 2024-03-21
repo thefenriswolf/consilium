@@ -25,8 +25,8 @@ func initNavButtons() (*Button, *Button, *Button, *Button, *Button) {
 		buttonIdleColor    color.RGBA = Overlay2
 		buttonClickedColor color.RGBA = Blue
 
-		buttonStartX   int = ((ScreenWidth - (5 * buttonWidth)) / 5) / 2
-		buttonDistance int = ScreenWidth / 5
+		buttonStartX   = ((ScreenWidth - (5 * buttonWidth)) / 5) / 2
+		buttonDistance = ScreenWidth / 5
 	)
 	AboutButton := newButton()
 	AboutButton.posX = buttonStartX
@@ -124,6 +124,10 @@ func pageSelector(screen *ebiten.Image, page Page) {
 }
 
 func exportPage(screen *ebiten.Image) {
+
+	imgButton := newIMGButton(imageLoader(logo), 100, 100)
+	imgButton.Draw(screen)
+
 	txt := notImplementedYet + "export"
 	text.Draw(screen, txt, mpBold, 300, 300, Red)
 	AboutButton, SetupButton, CalendarButton, ExportButton, SettingsButton := initNavButtons()
